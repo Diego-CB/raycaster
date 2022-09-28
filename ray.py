@@ -1,7 +1,10 @@
+from Intersect import Intersect
 from Lib.IO_bmp import *
 from Lib.Vector import V3
 from Lib.util import *
-from Lib.Sphere import Sphere
+from Sphere import Sphere
+from Light import Light
+from material import Material
 from cmath import pi
 from math import tan
 
@@ -11,6 +14,8 @@ class Raytracer:
     self.height = height
     self.bg_color = color(0, 0, 0)
     self.current_color = color(1, 1, 1)
+    self.scene = []
+    self.light = Light(V3(0, 0, 0), 1)
     self.clear()
 
   def clear(self):
@@ -46,23 +51,55 @@ class Raytracer:
 
     filename = 'ray.bmp'
     self.write('./Renders/' + filename)
-  
+
   def cast_ray(self, origin, direction):
-    check = [ s.ray_intersect(origin, direction) 
-      for s in [
-        Sphere(V3(0, 3.8, -16), 4),
-        Sphere(V3(0, -1.2, -16), 3),
-        Sphere(V3(0, -5.5, -16), 2),
-      ]
-    ]
+    material, intersect = self.scene_intersect(origin, direction)
+    if material is None: return self.bg_color
 
-    if True in check:
-      return color(0.8, 0.8, 0.8)
-    else:
-      return self.bg_color
+    light_dir = (self.light.position - intersect.point).normalize()
+    intensity = light_dir * intersect.normal
+    print(material.diffuse)
+    print(intensity)
 
+    diffuse = (
+      int(material.diffuse[2] * intensity),
+      int(material.diffuse[1] * intensity),
+      int(material.diffuse[0] * intensity)
+    )
+    print(diffuse)
+    
+    diffuse = color(*diffuse, normalized=False)
+
+    return diffuse
+
+
+  def scene_intersect(self, origin, direction):
+    zBuffer = 9999
+    material = None
+    intersect = None
+
+    for o in self.scene:
+      obj_intersect = o.ray_intersect(origin, direction)
+
+      if obj_intersect:
+        if obj_intersect.distance < zBuffer:
+          zBuffer = obj_intersect.distance
+          material = o.material
+          intersect = obj_intersect
+
+    return material, intersect
 
 # -- main --
-SIZE = 400
+
+red = Material(color(1, 0, 0))
+white = Material(color(1, 1, 1))
+SIZE = 800
 r = Raytracer(SIZE, SIZE)
+r.light = Light(V3(-3, -2, 0).normalize(), 1)
+r.scene = [
+  Sphere(V3(-3, 0, -16), 2, red),
+  Sphere(V3(-2.8, 0, -10), 2, white),
+]
+
+r.point(100, 100)
 r.render()

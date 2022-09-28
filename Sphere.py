@@ -1,8 +1,11 @@
+from math import dist
+from Intersect import Intersect
 
 class Sphere:
-  def __init__(self, center, radius) -> None:
+  def __init__(self, center, radius, material) -> None:
     self.center = center
     self.radius = radius
+    self.material = material
 
   def ray_intersect(self, origin, direction):
     L = self.center - origin
@@ -20,5 +23,12 @@ class Sphere:
     if t0 < 0 or t1 < 1:
       return False
 
-    return True
+    impact = direction * t0 + origin
+    normal = (impact- self.center).normalize()
+
+    return Intersect(
+      distance=t0,
+      point=impact,
+      normal=normal
+    )
   
