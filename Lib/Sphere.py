@@ -1,8 +1,10 @@
+from .util import *
 
 class Sphere:
-  def __init__(self, center, radius) -> None:
+  def __init__(self, center, radius, color=color(1, 1, 1)) -> None:
     self.center = center
     self.radius = radius
+    self.color = color
 
   def ray_intersect(self, origin, direction):
     L = self.center - origin

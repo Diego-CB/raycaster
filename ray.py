@@ -12,6 +12,7 @@ class Raytracer:
     self.bg_color = color(0, 0, 0)
     self.current_color = color(1, 1, 1)
     self.clear()
+    self.scene = []
 
   def clear(self):
     ''' Fills framebuffer with the actual clear_color'''
@@ -48,21 +49,31 @@ class Raytracer:
     self.write('./Renders/' + filename)
   
   def cast_ray(self, origin, direction):
-    check = [ s.ray_intersect(origin, direction) 
-      for s in [
-        Sphere(V3(0, 3.8, -16), 4),
-        Sphere(V3(0, -1.2, -16), 3),
-        Sphere(V3(0, -5.5, -16), 2),
-      ]
-    ]
+    actual_color = self.bg_color
 
-    if True in check:
-      return color(0.8, 0.8, 0.8)
-    else:
-      return self.bg_color
+    for n in self.scene:      
+      if n.ray_intersect(origin, direction):
+        actual_color = n.color
+
+    return actual_color
 
 
 # -- main --
 SIZE = 400
 r = Raytracer(SIZE, SIZE)
+r.bg_color = color(0, 0, 0.35)
+r.clear()
+
+WHITE = color(0.7, 0.7, 0.7)
+ORANGE = color(0.7, 0.5, 0)
+BLACK = color(0, 0, 0)
+
+r.scene = [
+  Sphere(V3(0, -4, -16), 2, WHITE),
+  Sphere(V3(0, -0.5, -16), 3, WHITE),
+  Sphere(V3(0, 3.8, -16), 4, WHITE),
+  Sphere(V3(0, -3.6, -16), 0.18, ORANGE),
+  Sphere(V3(0.8, -4.6, -16), 0.2, BLACK),
+  Sphere(V3(-0.8, -4.6, -16), 0.2, BLACK),
+]
 r.render()
