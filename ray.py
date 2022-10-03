@@ -107,6 +107,34 @@ class Raytracer:
 # -- main --
 
 if __name__ == '__main__':
+  polar_skin = Material(color(1, 1, 1), [0.9, 0.1], 5)
+  polar_body = Material(color(1, 1, 1), [0.6, 0.3], 50)
+  try_c = Material(color(1, 0, 0), [0.6, 0.3], 50)
+
+  r = Raytracer(400, 400)
+  r.light = Light(V3(0, 0, 0).normalize(), 1, color(1, 1, 1))
+
+  polar_bear = [
+    Sphere(V3(-2.5, -2.5 + 2.2, -9), 1.1, polar_body),
+    
+    Sphere(V3(-3.2, -2.8 + 2, -8), 0.5, polar_skin),
+    Sphere(V3(-1.3, -2.9 + 2, -8.4), 0.55, polar_skin),
+    
+    Sphere(V3(-3, -2.8 + 3.5, -8), 0.5, polar_skin),
+    Sphere(V3(-1.5, -2.8 + 3.5, -8), 0.5, polar_skin),
+    
+    Sphere(V3(-2.28, -1.7, -8), 0.7, polar_skin),
+    Sphere(V3(-2.65, -2.05, -7.5), 0.35, polar_skin),
+    Sphere(V3(-1.65, -2.15, -7.8), 0.38, polar_skin),
+  ]
+
+  brown_bear = []
+
+  r.scene = [*polar_bear, *brown_bear]
+
+  r.render()
+
+else:
   rubber = Material(diffuse=color(80, 0, 0, False), albedo=[0.9, 0.1], spec=10)
   ivory = Material(diffuse=color(100, 100, 80, False), albedo=[0.6, 0.3], spec=50)
 
