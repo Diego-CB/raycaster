@@ -105,16 +105,17 @@ class Raytracer:
     return material, intersect
 
 # -- main --
-rubber = Material(diffuse=color(80, 0, 0, False), albedo=[0.9, 0.1], spec=10)
-ivory = Material(diffuse=color(100, 100, 80, False), albedo=[0.6, 0.3], spec=50)
-# red = Material(color(1, 0, 0))
-# white = Material(color(1, 1, 1))
-SIZE = 1024
-r = Raytracer(SIZE, SIZE)
-r.light = Light(V3(0, 0, 0).normalize(), 1, color(1, 1, 1))
-r.scene = [
-  Sphere(V3(1, 0, -16), 2, rubber),
-  Sphere(V3(-2.8, 0, -10), 2, ivory),
-]
 
-r.render()
+if __name__ == '__main__':
+  rubber = Material(diffuse=color(80, 0, 0, False), albedo=[0.9, 0.1], spec=10)
+  ivory = Material(diffuse=color(100, 100, 80, False), albedo=[0.6, 0.3], spec=50)
+
+  r = Raytracer(800, 800)
+  r.light = Light(V3(0, 0, 0).normalize(), 1, color(1, 1, 1))
+
+  r.scene = [
+    Sphere(V3(4, 0, -16), 3, rubber),
+    Sphere(V3(-1.5, 0, -10), 3, ivory),
+  ]
+
+  r.render()
