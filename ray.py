@@ -59,21 +59,23 @@ class Raytracer:
 
 
 # -- main --
-SIZE = 400
-r = Raytracer(SIZE, SIZE)
-r.bg_color = color(0, 0, 0.35)
-r.clear()
 
-WHITE = color(0.7, 0.7, 0.7)
-ORANGE = color(0.7, 0.5, 0)
-BLACK = color(0, 0, 0)
+if __name__ == '__main__':
+  r = Raytracer(600, 600)
+  r.bg_color = color(0, 0, 0.35)
+  r.clear()
 
-r.scene = [
-  Sphere(V3(0, -4, -16), 2, WHITE),
-  Sphere(V3(0, -0.5, -16), 3, WHITE),
-  Sphere(V3(0, 3.8, -16), 4, WHITE),
-  Sphere(V3(0, -3.6, -16), 0.18, ORANGE),
-  Sphere(V3(0.8, -4.6, -16), 0.2, BLACK),
-  Sphere(V3(-0.8, -4.6, -16), 0.2, BLACK),
-]
-r.render()
+  WHITE = color(0.7, 0.7, 0.7)
+  ORANGE = color(0.7, 0.5, 0)
+  BLACK = color(0, 0, 0)
+
+  r.scene = [
+    Sphere(V3(0, -4, -16), 2, WHITE),
+    Sphere(V3(0, -0.4, -16), 3, WHITE),
+    Sphere(V3(0, 3.8, -16), 4, WHITE),
+    Sphere(V3(0, -3.6, -16), 0.18, ORANGE),
+    Sphere(V3(0.8, -4.6, -16), 0.2, BLACK),
+    Sphere(V3(-0.8, -4.6, -16), 0.2, BLACK),
+  ]
+
+  r.render()
