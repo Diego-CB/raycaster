@@ -20,9 +20,11 @@ class Sphere:
     t0 = tca - thc
     t1 = tca + thc
     
-    if t0 < 0 or t1 < 1:
+    t = t0
+    if t < 0:
+      t = t1
+    if t < 0:
       return False
-
     impact = direction * t0 + origin
     normal = (impact- self.center).normalize()
 

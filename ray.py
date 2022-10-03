@@ -4,6 +4,7 @@ from Lib.Vector import V3
 from Lib.util import *
 from Sphere import Sphere
 from Light import Light
+from lib import *
 from material import Material
 from cmath import pi
 from math import tan
@@ -57,20 +58,34 @@ class Raytracer:
     if material is None: return self.bg_color
 
     light_dir = (self.light.position - intersect.point).normalize()
+    
+    # Difusse component
     intensity = light_dir * intersect.normal
-    print(material.diffuse)
-    print(intensity)
+    intensity = 0 if intensity < 0 else intensity
 
     diffuse = (
-      int(material.diffuse[2] * intensity),
-      int(material.diffuse[1] * intensity),
-      int(material.diffuse[0] * intensity)
+      int(material.diffuse[2] * intensity * material.albedo[0]),
+      int(material.diffuse[1] * intensity * material.albedo[0]),
+      int(material.diffuse[0] * intensity * material.albedo[0])
     )
-    print(diffuse)
     
-    diffuse = color(*diffuse, normalized=False)
 
-    return diffuse
+    # Specular intensity
+    light_reflection = reflect(light_dir, intersect.normal)
+    reflection_intensity = max(0, light_reflection * direction)
+    specular_intensity = self.light.intensity * reflection_intensity ** material.spec
+    specular = (
+      int(self.light.color[2] * specular_intensity * material.albedo[1]),
+      int(self.light.color[0] * specular_intensity * material.albedo[1]),
+      int(self.light.color[1] * specular_intensity * material.albedo[1])
+    )
+
+    spec_color = (
+      diffuse[0] + specular[0],
+      diffuse[1] + specular[2],
+      diffuse[2] + specular[1]
+    )
+    return color(*spec_color, normalized=False)
 
 
   def scene_intersect(self, origin, direction):
@@ -90,16 +105,16 @@ class Raytracer:
     return material, intersect
 
 # -- main --
-
-red = Material(color(1, 0, 0))
-white = Material(color(1, 1, 1))
-SIZE = 800
+rubber = Material(diffuse=color(80, 0, 0, False), albedo=[0.9, 0.1], spec=10)
+ivory = Material(diffuse=color(100, 100, 80, False), albedo=[0.6, 0.3], spec=50)
+# red = Material(color(1, 0, 0))
+# white = Material(color(1, 1, 1))
+SIZE = 1024
 r = Raytracer(SIZE, SIZE)
-r.light = Light(V3(-3, -2, 0).normalize(), 1)
+r.light = Light(V3(0, 0, 0).normalize(), 1, color(1, 1, 1))
 r.scene = [
-  Sphere(V3(-3, 0, -16), 2, red),
-  Sphere(V3(-2.8, 0, -10), 2, white),
+  Sphere(V3(1, 0, -16), 2, rubber),
+  Sphere(V3(-2.8, 0, -10), 2, ivory),
 ]
 
-r.point(100, 100)
 r.render()
