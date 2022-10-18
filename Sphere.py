@@ -26,7 +26,7 @@ class Sphere:
     if t < 0:
       return False
     impact = direction * t0 + origin
-    normal = (impact- self.center).normalize()
+    normal = (impact - self.center).normalize()
 
     return Intersect(
       distance=t0,

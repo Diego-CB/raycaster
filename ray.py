@@ -8,6 +8,9 @@ from lib import *
 from material import Material
 from cmath import pi
 from math import tan
+from Plane import Plane
+
+MAX_RECURSION_DEPTH = 3
 
 class Raytracer:
   def __init__(self, width, height):
@@ -53,27 +56,80 @@ class Raytracer:
     filename = 'ray.bmp'
     self.write('./Renders/' + filename)
 
-  def cast_ray(self, origin, direction):
+  def cast_ray(self, origin, direction, recursion = 0):
+    if recursion >= MAX_RECURSION_DEPTH:
+      return self.bg_color
+
     material, intersect = self.scene_intersect(origin, direction)
-    if material is None: return self.bg_color
+
+    if material is None:
+      return self.bg_color
+
+
+    # Refraccion
+
+    if material.albedo[3] > 0:
+      refract_direction = refract(direction, intersect.normal, material.refractive_index)
+      refract_bias = -3 if (refract_direction * intersect.normal) < 0 else 3
+      refract_origin = intersect.point + (intersect.normal * refract_bias)
+      refract_color = self.cast_ray(refract_origin, refract_direction, recursion + 1)
+    else:
+      refract_color = color(0, 0, 0)
+
+    refraction = color(
+      int(refract_color[2] * material.albedo[3]),
+      int(refract_color[1] * material.albedo[3]),
+      int(refract_color[0] * material.albedo[3]),
+      normalized=False
+    )
+
+    # Reflexion
+    offset_normal = intersect.normal * 0.001
+
+    if material.albedo[2] > 0:
+      reflect_dir = reflect(direction, intersect.normal)
+      reflect_orig = (
+        offset_normal - intersect.point \
+          if reflect_dir * intersect.normal < 0 \
+          else intersect.point + offset_normal
+      )
+      reflect_color = self.cast_ray(reflect_orig, reflect_dir, recursion + 1)
+    else:
+      reflect_color = color(0, 0, 0)
+
+    reflection = (
+      int(float(reflect_color[0]) * material.albedo[2]),
+      int(float(reflect_color[1]) * material.albedo[2]),
+      int(float(reflect_color[2]) * material.albedo[2]),
+    )
 
     light_dir = (self.light.position - intersect.point).normalize()
+    light_distance = (self.light.position - intersect.point).size()
+
+    # Shadows
+
+    shadow_orig = (intersect.point - offset_normal) if (light_dir * intersect.normal) < 0 else (intersect.point + offset_normal)
+    shadow_material, shadow_intersect = self.scene_intersect(shadow_orig, light_dir)
+    shadow_intensity = 0
+
+    if shadow_material and (shadow_intersect.point - shadow_orig).size() < light_distance:
+      shadow_intensity = 0.4
+
+    intensity = self.light.intensity * max(0, light_dir * intersect.normal) * (1 - shadow_intensity)
+    
     
     # Difusse component
-    intensity = light_dir * intersect.normal
-    intensity = 0 if intensity < 0 else intensity
 
     diffuse = (
       int(material.diffuse[2] * intensity * material.albedo[0]),
       int(material.diffuse[1] * intensity * material.albedo[0]),
       int(material.diffuse[0] * intensity * material.albedo[0])
     )
-    
 
     # Specular intensity
     light_reflection = reflect(light_dir, intersect.normal)
     reflection_intensity = max(0, light_reflection * direction)
-    specular_intensity = self.light.intensity * reflection_intensity ** material.spec
+    specular_intensity = self.light.intensity * reflection_intensity**material.spec
     specular = (
       int(self.light.color[2] * specular_intensity * material.albedo[1]),
       int(self.light.color[0] * specular_intensity * material.albedo[1]),
@@ -81,12 +137,12 @@ class Raytracer:
     )
 
     spec_color = (
-      diffuse[0] + specular[0],
-      diffuse[1] + specular[2],
-      diffuse[2] + specular[1]
+      max(0, min(255, diffuse[0] + specular[2] + reflection[2] + refraction[2])),
+      max(0, min(255, diffuse[1] + specular[1] + reflection[1] + refraction[1])),
+      max(0, min(255, diffuse[2] + specular[0] + reflection[0] + refraction[0])),
     )
-    return color(*spec_color, normalized=False)
 
+    return color(*spec_color, normalized=False)
 
   def scene_intersect(self, origin, direction):
     zBuffer = 9999
@@ -104,46 +160,31 @@ class Raytracer:
 
     return material, intersect
 
+  def get_bg(self, direction):
+    if self.envmap:
+      return self.envmap.get_color(direction)
+
+    return self.bg_color
+
 # -- main --
 
 if __name__ == '__main__':
-  polar_skin = Material(color(1, 1, 1), [0.9, 0.1], 5)
-  polar_body = Material(color(1, 1, 1), [0.6, 0.3], 50)
-  try_c = Material(color(1, 0, 0), [0.6, 0.3], 50)
+  r = Raytracer(500, 500)
+  r.light = Light(V3(-1, -1, 1), 1.2)
+  r.bg_color = color(0, 0, 0, normalized=False)
+  r.bg_color = color(0, 0, 140, normalized=False)
 
-  r = Raytracer(400, 400)
-  r.light = Light(V3(0, 0, 0).normalize(), 1, color(1, 1, 1))
-
-  polar_bear = [
-    Sphere(V3(-2.5, -2.5 + 2.2, -9), 1.1, polar_body),
-    
-    Sphere(V3(-3.2, -2.8 + 2, -8), 0.5, polar_skin),
-    Sphere(V3(-1.3, -2.9 + 2, -8.4), 0.55, polar_skin),
-    
-    Sphere(V3(-3, -2.8 + 3.5, -8), 0.5, polar_skin),
-    Sphere(V3(-1.5, -2.8 + 3.5, -8), 0.5, polar_skin),
-    
-    Sphere(V3(-2.28, -1.7, -8), 0.7, polar_skin),
-    Sphere(V3(-2.65, -2.05, -7.5), 0.35, polar_skin),
-    Sphere(V3(-1.65, -2.15, -7.8), 0.38, polar_skin),
-  ]
-
-  brown_bear = []
-
-  r.scene = [*polar_bear, *brown_bear]
-
-  r.render()
-
-else:
-  rubber = Material(diffuse=color(80, 0, 0, False), albedo=[0.9, 0.1], spec=10)
-  ivory = Material(diffuse=color(100, 100, 80, False), albedo=[0.6, 0.3], spec=50)
-
-  r = Raytracer(800, 800)
-  r.light = Light(V3(0, 0, 0).normalize(), 1, color(1, 1, 1))
+  rubber = Material(color(180, 0, 0, normalized=False), [0.9, 0.1, 0, 0], 10)
+  ivory = Material(color(200, 200, 180, normalized=False), [0.6, 0.3, 0.1, 0], 50)
+  mirror = Material(color(0, 0, 0), [0, 10, 0.8, 0], 1425)
+  glass = Material(color(0, 0, 0), [0, 0, 0, 1], 125, 1.5)
 
   r.scene = [
-    Sphere(V3(4, 0, -16), 3, rubber),
-    Sphere(V3(-1.5, 0, -10), 3, ivory),
+    Sphere(V3(0, -2, -11.5), 2, ivory),
+    Sphere(V3(1, 1, -8.5), 1.7, rubber),
+    Sphere(V3(-2, 1, -10), 2.5, mirror),
+    Sphere(V3(0, 0, -5), 1, glass),
+    Plane(V3(0, 2.8, -5), 10, 10, ivory)
   ]
 
   r.render()
