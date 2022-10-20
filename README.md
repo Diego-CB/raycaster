@@ -15,7 +15,7 @@
 Para obtener la nota completa de esta tarea deben entregar lo siguiente:
   - [x] Código fuente capaz de renderizar esferas por medio de un Ray Intersect Algorithm.
   - [x] El programa principal debe mostrar la siguiente figura (o lo más cercano posible) en un archivo BMP: 
-  <img src='./Renders/ositos_template.png'>
+  <img src='https://github.com/Nes15442/raycaster/blob/RT2/Renders/ositos_template.png'>
 
 ## 🗃️ Estructura de Archivos
 
