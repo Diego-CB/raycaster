@@ -1,4 +1,4 @@
-# 🎱 RT1: Esferas
+# 🎱 RT2: Phong Law
 
 ## 📡 Tecnologias Utilizadas
 - Python 🐍: Modern syntax, Interpreted Languaje
