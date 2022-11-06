@@ -2,3 +2,4 @@ __pycache__
 Renders/*.bmp
 *.ipynb
 models/*.png
+run.*
