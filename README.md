@@ -6,15 +6,14 @@
 
 # ✅Rubrica
 
-### Objetivos:
-  Que los estudiantes preparen el ambiente de desarrollopara su RayTracer Simple
-  Que los estudiantes puedan dibujar esferas con susmateriales difusos
+- Criterio subjetivo. Por qué tan compleja sea su escena
+- Criterio subjetivo. por qué tan visualmente atractiva sea su escena
 
-### Requerimientos:
-
-Para obtener la nota completa de esta tarea deben entregar lo siguiente:
-  - [x] Código fuente capaz de renderizar esferas por medio de un Ray Intersect Algorithm.
-  - [x] El programa principal debe mostrar la siguiente figura (o lo más cercano posible) en un archivo BMP: 
+- [x] por cada material diferente que implementen, para un máximo de 5
+  - [ ] extra por cada uno de estos materiales que tenga texturas
+- [x] por implementar refracción en al menos uno de sus materiales
+- [x] por implementar reflexión en al menos uno de sus materiales
+- [ ] por implementar figuras geométricas distintas a esferas, cubos, rectangulos y planos
 
 ## 🗃️ Estructura de Archivos
 
