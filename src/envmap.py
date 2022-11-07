@@ -4,8 +4,8 @@ import numpy
 import mmap
 import struct
 import math
-from Lib.util import *
-from Lib.Vector import *
+from util.utils import *
+from util.Vector import *
 
 
 class Envmap:

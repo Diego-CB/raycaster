@@ -1,5 +1,5 @@
 from ..Intersect import Intersect
-from ..Lib.Vector import V3
+from ..util import V3
 from ..material import Material
 
 class Cube:
@@ -51,17 +51,7 @@ class Cube:
       (self.center.y - origin.y) / direction.y,
       (self.center.z - origin.z) / direction.z
     )
-    try:
-      impact = (direction @ d) - origin
-    except:
-      print('direction', direction)
-      print('d', d)
-      print('origin', origin)
-      impact = (direction @ d)
-      print('matmul', impact)
-      impact = impact - origin
-      print('resta', impact)
-      raise Exception()
+    impact = (direction @ d) - origin
 
     impact_layer = [
       self.center.x - origin.x,

@@ -1,6 +1,5 @@
-from math import dist
 from ..Intersect import Intersect
-from ..Lib.Vector import V3
+from ..util import V3
 from ..material import Material
 
 class Plane:

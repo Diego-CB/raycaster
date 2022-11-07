@@ -1,14 +1,7 @@
-from .Intersect import Intersect
-from .Lib.IO_bmp import *
-from .Lib.Vector import V3
-from .Lib.util import *
-from .Light import Light
-from .Lib.lib import *
-from .material import Material
 from cmath import pi
 from math import tan
-from .models.Sphere import Sphere
-from .models.Plane import Plane
+from .Light import Light
+from .util import *
 
 MAX_RECURSION_DEPTH = 3
 
@@ -166,25 +159,3 @@ class Raytracer:
 
     return self.bg_color
 
-# -- main --
-
-if __name__ == '__main__':
-  r = Raytracer(500, 500)
-  r.light = Light(V3(-1, -1, 1), 1.2)
-  r.bg_color = color(0, 0, 0, normalized=False)
-  r.bg_color = color(0, 0, 140, normalized=False)
-
-  rubber = Material(color(180, 0, 0, normalized=False), [0.9, 0.1, 0, 0], 10)
-  ivory = Material(color(200, 200, 180, normalized=False), [0.6, 0.3, 0.1, 0], 50)
-  mirror = Material(color(0, 0, 0), [0, 10, 0.8, 0], 1425)
-  glass = Material(color(0, 0, 0), [0, 0, 0, 1], 125, 1.5)
-
-  r.scene = [
-    Sphere(V3(0, -2, -11.5), 2, ivory),
-    Sphere(V3(1, 1, -8.5), 1.7, rubber),
-    Sphere(V3(-2, 1, -10), 2.5, mirror),
-    Sphere(V3(0, 0, -5), 1, glass),
-    Plane(V3(0, 2.8, -5), 10, 10, ivory)
-  ]
-
-  r.render()

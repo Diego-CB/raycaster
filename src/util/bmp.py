@@ -11,7 +11,7 @@
 --------------------------------------
 '''
 
-from .util import *
+from .utils import *
 
 # Writing of BMP
 

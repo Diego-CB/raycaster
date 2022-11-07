@@ -1,4 +1,3 @@
-from math import dist
 from ..Intersect import Intersect
 
 class Sphere:
