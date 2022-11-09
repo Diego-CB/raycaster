@@ -13,8 +13,12 @@ if __name__ == '__main__':
   mirror = Material(color(0, 0, 0), [0, 10, 0.8, 0], 1425)
   glass = Material(color(0, 0, 0), [0, 0, 0, 1], 125, 1.5)
 
+  cc = Material(color(1, 1, 1), [1, 0, 0, 0], 0, 0)
+
   r.scene = [
-    Cube(V3(0, 0.5, -2), 1, ivory)
+    Cube(V3(-0.05, 0.2, -10), 5, rubber),
+    Sphere(V3(0, 0.2, -8), 2, glass),
+    Plane(V3(0, 1.5, -3), 1, 1, ivory)
   ]
 
   r.render()

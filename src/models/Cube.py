@@ -7,8 +7,9 @@ class Cube:
     self.center:V3 = center
     self.material:Material = material
     self.size = size
-    self.minBounding = center + V3(size, size, size)
-    self.maxBounding = center - V3(size, size, size)
+    b_size = size/2
+    self.minBounding = center + V3(b_size, b_size, b_size)
+    self.maxBounding = center - V3(b_size, b_size, b_size)
 
   def ray_intersect(self, origin:V3, direction:V3) -> Intersect:
     txmin = (self.minBounding.x - origin.x) / direction.x
@@ -41,7 +42,7 @@ class Cube:
       return False
  
     if (tzmin > txmin):
-        txmin = tzmin
+      txmin = tzmin
  
     if (tzmax < txmax):
       txmax = tzmax
@@ -51,13 +52,19 @@ class Cube:
       (self.center.y - origin.y) / direction.y,
       (self.center.z - origin.z) / direction.z
     )
-    impact = (direction @ d) - origin
 
-    impact_layer = [
+    d = self.center - origin
+    impact = V3(
+      direction.x * d.x / direction.x,
+      direction.y * d.y / direction.y,
+      direction.z * d.z / direction.z
+    ) - origin
+
+    impact_layer = (
       self.center.x - origin.x,
       self.center.y - origin.y,
       self.center.z - origin.z
-    ]
+    )
     min_index = impact_layer.index(min(impact_layer))
 
     impact_layer:V3 = V3(
@@ -66,7 +73,12 @@ class Cube:
       -1 if min_index == 2 else 1,
     )
 
-    normal = (direction @ impact_layer).normalize()
+    normal = V3(
+      direction.x * impact_layer.x,
+      direction.y * impact_layer.y,
+      direction.z * impact_layer.z,
+    ).normalize()
+
     return Intersect(
       distance=d.size(),
       point=impact,
