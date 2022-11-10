@@ -12,6 +12,7 @@ class Cube:
     self.maxBounding = center - V3(b_size, b_size, b_size)
 
   def ray_intersect(self, origin:V3, direction:V3) -> Intersect:
+    if 0 in [direction.x, direction.y, direction.z]: return False
     txmin = (self.minBounding.x - origin.x) / direction.x
     txmax = (self.maxBounding.x - origin.x) / direction.x
     
@@ -47,11 +48,6 @@ class Cube:
     if (tzmax < txmax):
       txmax = tzmax
 
-    d = V3(
-      (self.center.x - origin.x) / direction.x,
-      (self.center.y - origin.y) / direction.y,
-      (self.center.z - origin.z) / direction.z
-    )
 
     d = self.center - origin
     impact = V3(
