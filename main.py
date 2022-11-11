@@ -1,18 +1,16 @@
-from src.util import *
-from src.models import *
 from src import *
 
 if __name__ == '__main__':
   r = Raytracer(500, 500)
-  r.light = Light(V3(2, -1, 1), 1.2, color(250, 191, 30, normalized=False))
+  r.light = Light(V3(1, -1, 1), 1.1, color(250, 191, 30, normalized=False))
   r.bg_color = color(135, 206, 255, normalized=False)
 
   grass = Material(color(0, 1, 0), [0.9, 0.1, 0, 0], 40)
-  white_wood = Material(color(255, 255, 255, normalized=False), [0.75, 0.1, 0.15, 0], 50)
-  leaf = Material(color(24, 94, 28, normalized=False), [0.5, 0.2, 0.1, 0.1], 40, 5)
+  white_wood = Material(color(230, 230, 230, normalized=False), [0.75, 0.1, 0.15, 0], 50)
+  leaf = Material(color(24, 94, 28, normalized=False), [0.4, 0.2, 0.1, 0.2], 40, 5)
   dirt = Material(color(122, 68, 11, normalized=False), [0.9, 0.1, 0, 0], 40)
-  light_wood = Material(color(237, 185, 88, normalized=False), [0.6, 0.1, 0.3, 0], 80)
-  fire = Material(color(255, 130, 30, normalized=False), [0.8, 0, 0.1, 0.1], 50, 1)
+  light_wood = Material(color(237, 185, 88, normalized=False), [0.5, 0.1, 0.4, 0], 80)
+  fire = Material(color(255, 130, 30, normalized=False), [0.8, 0.15, 0, 0.05], 10, 1)
 
   Tree1 = [
     # Wood

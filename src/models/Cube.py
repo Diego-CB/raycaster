@@ -12,15 +12,14 @@ class Cube:
     self.maxBounding = center - V3(b_size, b_size, b_size)
 
   def ray_intersect(self, origin:V3, direction:V3) -> Intersect:
-    if 0 in [direction.x, direction.y, direction.z]: return False
-    txmin = (self.minBounding.x - origin.x) / direction.x
-    txmax = (self.maxBounding.x - origin.x) / direction.x
+    txmin = 9999 if direction.x == 0 else (self.minBounding.x - origin.x) / direction.x
+    txmax = 9999 if direction.x == 0 else (self.maxBounding.x - origin.x) / direction.x
     
     if txmin > txmax:
       txmin, txmax = txmax, txmin
     
-    tymin = (self.minBounding.y - origin.y) / direction.y
-    tymax = (self.maxBounding.y - origin.y) / direction.y
+    tymin = 9999 if direction.y == 0 else (self.minBounding.y - origin.y) / direction.y
+    tymax = 9999 if direction.y == 0 else (self.maxBounding.y - origin.y) / direction.y
 
     if tymin > tymax:
       tymin, tymax = tymax, tymin
@@ -33,8 +32,8 @@ class Cube:
     if (tymax < txmax):
         txmax = tymax
 
-    tzmin = (self.minBounding.z - origin.z) / direction.z
-    tzmax = (self.maxBounding.z - origin.z) / direction.z
+    tzmin = 9999 if direction.z == 0 else (self.minBounding.z - origin.z) / direction.z
+    tzmax = 9999 if direction.z == 0 else (self.maxBounding.z - origin.z) / direction.z
 
     if (tzmin > tzmax):
       tzmin, tzmax = tzmax, tzmin
@@ -48,14 +47,10 @@ class Cube:
     if (tzmax < txmax):
       txmax = tzmax
 
-
+    # Distance and impact
     d = self.center - origin
-    impact = V3(
-      direction.x * d.x / direction.x,
-      direction.y * d.y / direction.y,
-      direction.z * d.z / direction.z
-    ) - origin
 
+    # Normal
     impact_layer = (
       self.center.x - origin.x,
       self.center.y - origin.y,
@@ -63,21 +58,15 @@ class Cube:
     )
     min_index = impact_layer.index(min(impact_layer))
 
-    impact_layer:V3 = V3(
-      -1 if min_index == 0 else 1,
-      -1 if min_index == 1 else 1,
-      -1 if min_index == 2 else 1,
+    normal:V3 = V3(
+      0 if min_index != 0 else 1 if impact_layer[0] <= 0 else -1,
+      0 if min_index != 1 else 1 if impact_layer[1] <= 0 else -1,
+      0 if min_index != 2 else 1 if impact_layer[2] <= 0 else -1,
     )
-
-    normal = V3(
-      direction.x * impact_layer.x,
-      direction.y * impact_layer.y,
-      direction.z * impact_layer.z,
-    ).normalize()
 
     return Intersect(
       distance=d.size(),
-      point=impact,
+      point=d,
       normal=normal
     )
 
