@@ -17,17 +17,23 @@
 
 ## 🗃️ Estructura de Archivos
 
-- **`models`**
-  - Dentro de esta carpeta se encuentran los modelos a utilizar.
-  - **`NoText`**: En esta carpeta estan los modelos sin texturas.
-  - En las demás carpetas estan los modelos con texturas.
+- **`src`**
+  - Dentro de esta carpeta se encuentran las implementaciones de las funcionalidades de raytracing.
 
-- **`src`**: Codigo del software renderer (proyecto anterior) por si se necesita en un futuro.
+  - **`models`**: 
+    - En esta carpeta estan las figuras geometricas a utilizar.
+    - `Cube.py`: Implementacin de Cubo (ray_intersect)
+    - `Plane.py`: Implementacin de Plano (ray_intersect)
+    - `Sphere.py`: Implementacin de Esfera (ray_intersect)
 
-- **`Lib`**: Codigo de librerias a uilizar en el ray tracer
-  - `Sphere.py`: Implementacion de ray intersect de una esfera.
+  - **`util`**:
+    - En esta carpeta se encuentran las funcionalidades generales que se utilizan en el resto del programa.
+    - `bmp.py`: Escritura de archivos bmp
+    - `libs.py`: Calculo de reflexion y refraccion
+    - `utils.py`: Enpaquetado de colores en bytes.
+    - `Vector.py`: Implementacion de Vectores 3D
 
-- `ray.py`: Programa principal.
+- `main.py`: Contiene la definicion de Materiales a utilizar
 
 ## 🕹️ Getting Started
 
