@@ -1,4 +1,4 @@
-# 🎱 RT1: Esferas
+# 🔦 Proyecto 2 - Raytracer
 
 ## 📡 Tecnologias Utilizadas
 - Python 🐍: Modern syntax, Interpreted Languaje
