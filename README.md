@@ -6,8 +6,8 @@
 
 # ✅Rubrica
 
-- Criterio subjetivo. Por qué tan compleja sea su escena
-- Criterio subjetivo. por qué tan visualmente atractiva sea su escena
+- [x] Criterio subjetivo. Por qué tan compleja sea su escena
+- [x] Criterio subjetivo. por qué tan visualmente atractiva sea su escena
 
 - [x] por cada material diferente que implementen, para un máximo de 5
   - [ ] extra por cada uno de estos materiales que tenga texturas
@@ -33,7 +33,7 @@
     - `utils.py`: Enpaquetado de colores en bytes.
     - `Vector.py`: Implementacion de Vectores 3D
 
-- `main.py`: Contiene la definicion de Materiales a utilizar
+- `main.py`: Contiene la definicion de Materiales a utilizar, definicion de la escena y renderizado de la misma.
 
 ## 🕹️ Getting Started
 
