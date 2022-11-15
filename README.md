@@ -37,9 +37,10 @@
 
 ## 🕹️ Getting Started
 
-1. Ejecute el archivo `ray.py`.
+1. Ejecute el archivo `main.py`.
 2. Si no existen errores en ejecución, se escribirá un achivo `ray.bmp` con la imagen resultante en la carpeta **`Renders`**.
   > path de la imagen: `./Renders/ray.bmp`
+  > path de imagen de muestra: `./Renders/landscape_template.bmp`
 
 ## 🤓 Autor
 
